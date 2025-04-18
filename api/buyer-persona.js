@@ -71,7 +71,7 @@ Main Value Proposition: ${valueProp}
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: 'gpt-4o-2024-05-13', // ✅ GPT-4o instead of GPT-4
+        model: 'gpt-4o-mini-2024-07-18', // 💸 use mini model
         messages: [{ role: 'user', content: prompt }],
         temperature: 0.7
       })
