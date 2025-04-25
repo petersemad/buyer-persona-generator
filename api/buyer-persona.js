@@ -1,3 +1,4 @@
+// pages/api/generate-persona.js
 export default async function handler(req, res) {
   // ——— CORS HEADERS ———
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -17,51 +18,58 @@ export default async function handler(req, res) {
   }
 
   const prompt = `
-You are a senior B2B strategist and outbound consultant. Your job is to generate detailed buyer personas for B2B sales and outbound marketing. You help founders, sales teams, and marketers deeply understand their ideal customers so they can personalize outreach and improve conversion rates.
+You are a senior B2B strategist and outbound copywriter. Your task is to generate clear, actionable buyer personas that help sales teams write personalized cold emails and boost response rates.
 
-When given a product, a target market, and a value proposition, you will return the following:
+You will receive:
+- A product or service
+- A target market
+- A core value proposition
+
+Using this, return a persona document structured like this:
 
 ---
 **Buyer Persona Summary**  
-- Name: [persona label – e.g., “SaaS Growth Marketer”]  
-- Job Titles: [relevant titles]  
-- Department: [e.g. Marketing, Sales, RevOps]  
-- Typical Company Size: [e.g., 11–50 employees]  
-- Industry: [if applicable]
+- Persona Name: [e.g. “Ops-Focused Growth Marketer”]  
+- Common Job Titles: [realistic titles from LinkedIn]  
+- Department: [e.g. Marketing, Sales, Ops, RevOps, Product]  
+- Typical Company Size: [e.g. 11–50, 200–500 employees]  
+- Industry: [if relevant]  
+- Tools They Use: [e.g. HubSpot, Salesforce, Notion, ZoomInfo]
 
 **Key Goals**  
-- [goal 1]  
-- [goal 2]  
+- [What this person is trying to achieve this quarter or year]  
+- [Focus on strategic or operational outcomes]
 
 **Pain Points**  
-- [pain point 1]  
-- [pain point 2]  
+- [What they actually complain about in meetings or calls]  
+- [Avoid generic problems — be specific to their job]
 
 **KPIs They Care About**  
-- [KPI 1]  
-- [KPI 2]  
+- [Real metrics they report on or care about in dashboards]
 
 **Likely Objections**  
-- [objection 1]  
-- [objection 2]  
+- [Reasons they might not reply or buy]  
+- [Concerns they voice on calls]
 
 **Best Outreach Angles**  
-- [angle 1]  
-- [angle 2]  
-- [angle 3]  
+- [Approaches that resonate best in cold outreach]  
+- [Emotional or strategic hooks to use in email copy]  
+- [Based on persona psychology or work frustrations]
 
 **Cold Email Hook Examples**  
-- “[Hook line 1]”  
-- “[Hook line 2]”
+- “${valueProp} without hiring another rep”  
+- “Cut onboarding time for new hires by 30%”  
+(Make them short, punchy, and relevant to the pain points)
 
-Be concise, avoid fluff, and don’t explain the format. Do not use sales talk. Prioritize strategic insights that can guide outbound messaging.
+---
+Tone: Keep everything clear, specific, and 5th-grade readable. No sales fluff. No explanations. Just the persona.
 
-Generate a B2B buyer persona using the following details:
+Here’s the input:
 
 Product/Service: ${product}  
 Target Market: ${targetMarket}  
 Main Value Proposition: ${valueProp}
-  `;
+`;
 
   try {
     const openaiRes = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -71,7 +79,7 @@ Main Value Proposition: ${valueProp}
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini-2024-07-18', // 💸 use mini model
+        model: 'gpt-4o-mini-2024-07-18', // 💸 mini model
         messages: [{ role: 'user', content: prompt }],
         temperature: 0.7
       })
